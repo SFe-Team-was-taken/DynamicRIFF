@@ -9,3 +9,7 @@ However, the main advantage is that you can use a 40-bit or 48-bit system that i
 ---
 
 Specification coming soon
+
+---
+
+Designed by Spessasus, brought to life by the SFe Team
