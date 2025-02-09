@@ -1,19 +1,60 @@
-# Dynamic RIFF
+# Dynamic RIFF specification
+
+# Version 1.0.1 (Draft specification) - February 2025
+
+Copyright © 2025 SFe Team and contributors.
+Copyright © 2025 Spessasus.
+
+Designed and written by Spessasus - brought to life by the SFe Team.
+
+## 0.1 Revision history
+
+|          |                    |                                                                  |
+|----------|--------------------|------------------------------------------------------------------|
+| Revision | Date               | Description                                                      |
+| 1.0.1    | 9 February 2025    | First version                                                    |
+
+* * *
+
+## 0.2 Disclaimers
+
+This isn't currently an integral part of the SFe specification, and is planned for use in SFe 4.5.
+
+This is a draft. Expect errors, and feel free to report them.
+
+Do not use "draft" specifications (version number x.y.zL) to base final products on. Always refer to a "final" specification (version number x.yL).
+
+## 0.3 Updates and comments
+
+Please send all comments about this specification to the SFe Team:
+
+- GitHub: https://github.com/SFe-Team-was-taken
+
+* * *
+
+## 0.4 Table of contents
+
+The table of contents is currently not implemented.
+
+# Section 1: Introduction
+
+## 1.1 What is Dynamic RIFF?
 
 Dynamic RIFF is the RIFF-like format that allows flexible choice of bit width. 
 
-By using a new field, RIFF scales up to 2048-bit.
+By using a new field, RIFF scales up to 2040-bit (255 bytes). That results in a maximum file size of over 126 (googol)^6 terabytes!
 
 However, the main advantage is that you can use a 40-bit or 48-bit system that is significantly more efficient than just skipping straight to 64-bit.
 
----
+## 1.2 Use of Dynamic RIFF
 
-# Specification
+It is used to reduce the space taken by chunk headers of RIFF-like headers when not all bits are being used.
 
-## The new RIFF chunk
-The dynamic RIFF format changes the RIFF header with one byte.
+# Section 2: The new RIFF chunk
 
-### Original RIFF header
+## 2.1 RIFF header comparison
+
+### 2.1.1 Original RIFF header
 ```c
 typedef struct {
    CHAR[4] fourCC;      // the regular FourCC code
@@ -26,7 +67,10 @@ typedef struct {
 - `ckSize` - chunk size, in bytes.
 - `data` - the chunk's data.
 
-### Dynamic RIFF Header
+### 2.1.2 Dynamic RIFF Header
+
+The dynamic RIFF format changes the RIFF header with just one byte:
+
 ```c
 typedef struct {
    CHAR[4] fourCC;            // the regular FourCC code
@@ -41,7 +85,6 @@ typedef struct {
 - `ckSize` - chunk size, in bytes.
 - `data` - the chunk's data.
 
-
 This adds a new byte called `ckSizeLength.` 
 As the name suggests, this describes the length in bytes of the ckSize field,
  rather than being fixed at four bytes. 
@@ -50,8 +93,8 @@ Other than this change, this format behaves exactly like the regular RIFF format
 
 **IMPORTANT EXCEPTION:** The `ckSize` field is not required to be even.
 
-### Reading and writing the Dynamic RIFF format
-#### Example chunk
+## 2.2 Reading and writing the Dynamic RIFF format
+### 2.2.1 Example chunk
 ```js
 /* 0. */ 0x72   // "R"
 /* 1. */ 0x69   // "I"
@@ -65,7 +108,7 @@ Other than this change, this format behaves exactly like the regular RIFF format
 This saves two bytes from the original RIFF implementation.
 Regular RIFF would use a total of eight bytes for header (fourCC + ckSize), while this approach only uses 6.
 
-#### Larger chunk
+### 2.2.2 Larger chunk
 ```js
 /* 0. */ 0x72   // "R"
 /* 1. */ 0x69   // "I"
@@ -79,7 +122,7 @@ Regular RIFF would use a total of eight bytes for header (fourCC + ckSize), whil
 /* 9. */ "data" // the chunk data here: 1,099,511,627,775 bytes with some data
 ```
 
-### Example reading function
+### 2.2.3 Example reading function
 
 ```js
 function readDynamicRIFFChunk(dataArray)
@@ -117,7 +160,3 @@ function writeDynamicRIFFChunk(chunk)
 ```
 
 The maximum allowed size of `ckSizeLength` is 255.
-
----
-
-Designed and written by Spessasus, brought to life by the SFe Team
