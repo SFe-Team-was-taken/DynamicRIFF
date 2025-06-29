@@ -1,19 +1,22 @@
 # Dynamic RIFF specification
 
-# Version 1.0.2 (Draft specification) - June 2025
+# Version 1.0.3 (Draft specification) - June 2025
 
 Copyright © 2025 SFe Team and contributors.
-Copyright © 2025 Spessasus.
+Copyright © 2025 Spessasus, Cacodemon345.
 
 Designed and written by Spessasus - brought to life by the SFe Team.
+
+Special thanks to Cacodemon345 for the idea of dynamic identifier name lengths! 
 
 ## 0.1. Revision history
 
 |          |                    |                                                                  |
 |----------|--------------------|------------------------------------------------------------------|
 | Revision | Date               | Description                                                      |
-| 1.0.1    | 9 February 2025    | First version                                                    |
+| 1.0.3    | 29 June 2025       | A few corrections                                                |
 | 1.0.2    | 21 June 2025       | Major format revision                                            |
+| 1.0.1    | 9 February 2025    | First version                                                    |
 
 * * *
 
@@ -37,7 +40,7 @@ Please send all comments about this specification to the SFe Team:
 
 <!-- TOC -->
 * [Dynamic RIFF specification](#dynamic-riff-specification)
-* [Version 1.0.2 (Draft specification) - June 2025](#version-102-draft-specification---june-2025)
+* [Version 1.0.3 (Draft specification) - June 2025](#version-103-draft-specification---june-2025)
   * [0.1. Revision history](#01-revision-history)
   * [0.2. Disclaimers](#02-disclaimers)
   * [0.3. Updates and comments](#03-updates-and-comments)
@@ -114,7 +117,7 @@ That is:
 
 ### 2.1.2. Length-Prefixed String
 
-Length-Prefixed String, or LPString for short, is an ASCII string of variable length.
+Length-Prefixed String, or `LPString` for short, is an ASCII string of variable length.
 The first byte is the byte length of this string, excluding the byte itself:
 
 ```c
@@ -159,12 +162,12 @@ typedef struct {
 } RiffChunk;
 ```
 
-- `fourCC` - the four-letter character code, identifier of the chunk.
+- `cdID` - the four-letter character code, identifier of the chunk.
 - `ckSize` - chunk size, in bytes.
 - `data` - the chunk's data.
 
 ### 2.2.2. Dynamic RIFF Header
-The new chunk still consists of three elements:
+The new chunk now consists of four elements:
 
 ```c
 struct {
@@ -180,7 +183,7 @@ struct {
 - `ckType` - byte describing the inner contents of this chunk, allowing any DRIF supporting software to parse it.
 It is one of the predefined values.
 - `ckSize` - chunk size stored using Variable-Length Quantity, in bytes.
-_This excludes the length of ckType, ckName and ckSize, as well as any pad bytes._
+_This excludes the length of `ckType`, `ckName` and `ckSize`, as well as any pad bytes._
 - `ckData` - the chunk's data.
 
 `ckName` _cannot_ contain any non-printable characters, including line breaks.
@@ -214,7 +217,7 @@ Binary is allowed to mix the binary data, however, it is highly recommended to a
 
 It is recommended to use the text and numeric types with the List type to create a list of key-value pairs.
 
-Note that the text types _do not_ use the LPString as their length is known.
+Note that the text types _do not_ use the `LPString` as their length is known.
 
 ### 2.3.3. General structure
 
@@ -254,7 +257,7 @@ Note: Chunk type and name are merged for clarity: `<type> -> <name>`
           - `UTF8 -> Name`
             - `Piano C4`
           - `UTF8 -> Description`
-            - `Sampled from Steinway D`
+            - `Sampled from Yamaha CFX`
           - `Number -> MIDI Key`
             - `60`
           - `Number -> Pitch Correction`
